@@ -1,5 +1,6 @@
 package com.github.Four04Bank.models.Holders.Physical;
 
+import com.github.Four04Bank.exceptions.HolderException.HolderException;
 import com.github.Four04Bank.models.Holders.Holder;
 
 public class PhysicalHolder extends Holder {
@@ -22,7 +23,7 @@ public class PhysicalHolder extends Holder {
 
     private void cpfValidate(String cpf){
         if(cpf == null || cpf.length() != 11)
-            throw new NullPointerException("[ERROR] CPF inválido!");
+            throw new HolderException("[ERROR] CPF inválido!");
 
     }
 

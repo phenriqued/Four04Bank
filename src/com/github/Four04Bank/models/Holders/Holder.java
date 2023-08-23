@@ -1,5 +1,7 @@
 package com.github.Four04Bank.models.Holders;
 
+import com.github.Four04Bank.exceptions.HolderException.HolderException;
+
 public abstract class Holder {
 
     private String name;
@@ -9,7 +11,7 @@ public abstract class Holder {
 
     public Holder(String name, Integer old, String address, String phone) {
         if(name == null || old == null || address == null || phone == null){
-            throw new NullPointerException("[ERROR] Os dados não podem ser nulos!");
+            throw new HolderException("[ERROR] Os dados não podem ser nulos!");
         }
         oldValidation(old);
         phoneValidation(phone);
@@ -37,7 +39,7 @@ public abstract class Holder {
     }
     public void setAddress(String address) {
         if(address.equalsIgnoreCase(this.address)){
-            throw new RuntimeException("O endereço novo não pode ser o mesmo.");
+            throw new HolderException("O endereço novo não pode ser o mesmo.");
         }
         this.address = address;
     }
@@ -51,12 +53,12 @@ public abstract class Holder {
 
     private void oldValidation(Integer old){
         if(old < 18){
-            throw new RuntimeException("Menor de idade não pode abrir conta!");
+            throw new HolderException("Menor de idade não pode abrir conta!");
         }
     }
     private void phoneValidation(String phone){
         if(!phone.matches("^\\d{2}-\\d{9}$")){
-            throw new RuntimeException("O número de celular deve conter dois números de DDD seguido por um hífen e mais nove dígitos numéricos para o número de celular.");
+            throw new HolderException("O número de celular deve conter dois números de DDD seguido por um hífen e mais nove dígitos numéricos para o número de celular.");
         }
     }
 

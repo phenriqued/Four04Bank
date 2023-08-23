@@ -1,5 +1,6 @@
 package com.github.Four04Bank.models.Holders.Legal;
 
+import com.github.Four04Bank.exceptions.HolderException.HolderException;
 import com.github.Four04Bank.models.Holders.Holder;
 
 public class LegalHolder extends Holder {
@@ -21,7 +22,7 @@ public class LegalHolder extends Holder {
 
     private void cnpjValidate(String cnpj){
         if(cnpj == null || cnpj.length() != 14)
-            throw new NullPointerException("[ERROR] CPF inválido!");
+            throw new HolderException("[ERROR] CNPJ inválido!");
 
     }
 
