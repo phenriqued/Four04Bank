@@ -1,40 +1,48 @@
 package com.github.Four04Bank.views;
 
+import com.github.Four04Bank.views.InterfaceViews.InterfaceUI;
+
 import java.util.Scanner;
 
 public class UI {
 
     private Scanner scanner = new Scanner(System.in);
 
-    public UI(){
-        printMenu();
+    InterfaceUI interfaceUI;
+
+    public UI(InterfaceUI interfaceUI){
+        this.interfaceUI = interfaceUI;
     }
 
-    private void printMenu() {
+    public void printMenu() {
         Integer response = displayMenu();
         while (response != 4) {
-            switch (response) {
-                case 1:
-                    System.out.println("Venha ser cliente\n\n");
-                    //newHolder();
-                    break;
-                case 2:
-                    System.out.println("Seja bem nosso cliente\n\n");
-                    //holderClient();
-                    break;
-                case 3:
-                    System.out.println("Senha de Admin\n\n");
-                    //colaborador();
-                    break;
+            try {
+                switch (response) {
+                    case 1:
+                        interfaceUI.newCostumer();
+                        break;
+                    case 2:
+                        interfaceUI.operationCostumer();
+                        break;
+                    case 3:
+                        interfaceUI.menuCollaborator();
+                        break;
+                }
+                response = displayMenu();
+            }catch (Exception e){
+                System.out.println("\n"+e.getMessage());
+                System.out.println("Pressione \"Enter\" para continuar!\n");
+                scanner.nextLine();
+                scanner.nextLine();
             }
-            response = displayMenu();
         }
     }
 
     private Integer displayMenu(){
         System.out.println("""
-                    Seja Bem Vindo ao Banco Four04.
-                       Escolha uma opção:
+                    \nSeja Bem Vindo ao Banco Four04.
+                          Escolha uma opção:
                     1  - Não sou Cliente.
                     2  - Sou Cliente. 
                     3  - Sou Colaborador.

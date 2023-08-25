@@ -9,23 +9,17 @@ import java.math.BigDecimal;
 
 public class CreditAccount extends Account {
 
-    private String numberAccount;
+    private String numberCreditAccount;
     private BigDecimal limitBalance = new BigDecimal("500");
     private Taxes tax;
 
-    public CreditAccount(String agency, String number, String numberAccount ,Holder holder) {
-        super(agency, number, holder);
-        if(numberAccount == null || numberAccount.length() != 6) {
-            throw new AccountException("[ERROR] Dados Inválidos!");
-        }
-        this.numberAccount = numberAccount;
+    public CreditAccount(String agency ,Holder holder) {
+        super(agency, holder);
+        generateNumberCreditAccount();
     }
 
     public String getNumberAccount() {
-        return numberAccount;
-    }
-    public void setNumberAccount(String numberAccount) {
-        this.numberAccount = numberAccount;
+        return numberCreditAccount;
     }
     public Taxes getTax() {
         return tax;
@@ -40,6 +34,21 @@ public class CreditAccount extends Account {
         this.limitBalance = newBalanceLimit;
     }
 
+    private void generateNumberCreditAccount(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("03");
+        for (int i = 0; i <= 3; i++){
+            int numberAccount = (int)(Math.random() * 10);
+            stringBuilder.append(numberAccount);
+        }
+        numberCreditAccount = stringBuilder.toString();
+    }
+    private void validateBalance(){
+        if(getBalance().compareTo(limitBalance) <= 0){
+            throw new AccountException("[ERROR] Seu Saldo é menor ou igual ao limite de crédito");
+        }
+    }
+
     @Override
     public void withdraw(BigDecimal money) {
         if(getBalance().compareTo(BigDecimal.ZERO) <= 0 || money.compareTo(getBalance()) > 0){
@@ -52,19 +61,23 @@ public class CreditAccount extends Account {
     }
 
     @Override
-    public void transfer(Account account, BigDecimal money) {
+    public void transfer(Account recipientAccount, BigDecimal money) {
         validateMoney(money);
-        if(account == this || account == null){
+        if(recipientAccount == this || recipientAccount == null){
             throw new AccountException("[ERROR] Conta inválida.");
         }
-        withdraw(money);
-        account.deposit(money);
+        this.withdraw(money);
+        recipientAccount.deposit(money);
+    }
+    @Override
+    public String getCompleteNumberAccount() {
+        return getNumber() + "-"+ this.numberCreditAccount;
     }
 
-    private void validateBalance(){
-        if(getBalance().compareTo(limitBalance) <= 0){
-            throw new AccountException("[ERROR] Seu Saldo é menor ou igual ao limite de crédito");
-        }
+    @Override
+    public String toString() {
+        return "Conta Corrente: Agência: "+getAgency()+" - Número da Conta: " + getCompleteNumberAccount() +
+                "\nTitular: \n"+ getHolder()+ ".";
     }
 
 }

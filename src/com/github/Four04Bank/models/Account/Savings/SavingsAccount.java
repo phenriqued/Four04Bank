@@ -10,30 +10,33 @@ import java.math.BigDecimal;
 
 public class SavingsAccount extends Account {
 
-    private String numberAccount;
+    private String numberSavingAccount;
     private Taxes tax;
 
 
-    public SavingsAccount(String agency, String number, String numberAccount, Holder holder) {
-        super(agency, number, holder);
-        if(numberAccount == null || numberAccount.length() != 4) {
-            throw new AccountException("[ERROR] Dados Inválidos!");
-        }
-        this.numberAccount = numberAccount;
+    public SavingsAccount(String agency, Holder holder) {
+        super(agency, holder);
+        generateNumberSavingAccount();
     }
 
-    public String getNumberAccount() {
-        return numberAccount;
+    public String getNumberSavingAccount() {
+        return numberSavingAccount;
     }
-    public void setNumberAccount(String numberAccount) {
-        this.numberAccount = numberAccount;
-    }
-
     public Taxes getTax() {
         return tax;
     }
     public void setTax(Taxes tax) {
         this.tax = tax;
+    }
+
+    private void generateNumberSavingAccount(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("06");
+        for (int i = 0; i <= 1; i++){
+            int numberAccount = (int)(Math.random() * 10);
+            stringBuilder.append(numberAccount);
+        }
+        numberSavingAccount = stringBuilder.toString();
     }
 
     @Override
@@ -46,19 +49,27 @@ public class SavingsAccount extends Account {
     }
 
     @Override
-    public void transfer(Account account, BigDecimal money) {
+    public void transfer( Account recipientAccount, BigDecimal money) {
         validateMoney(money);
-        if(account == this || account == null){
+        if(recipientAccount == this || recipientAccount == null){
             throw new AccountException("[ERROR] Conta inválida.");
         }
-        if(account instanceof CreditAccount){
+        if(recipientAccount instanceof CreditAccount){
             BigDecimal fess = tax.tax().multiply(money);
-            setBalance(getBalance().subtract(fess));
+            this.setBalance(getBalance().subtract(fess));
         }
-        withdraw(money);
-        account.deposit(money);
+        this.withdraw(money);
+        recipientAccount.deposit(money);
     }
 
+    @Override
+    public String getCompleteNumberAccount() {
+        return getNumber() + "-"+ this.numberSavingAccount;
+    }
 
-
+    @Override
+    public String toString() {
+        return "Conta Poupança: Agência: "+getAgency()+" - Número da Conta: " + getCompleteNumberAccount() +
+                    "\nTitular: \n"+ getHolder()+ ".";
+    }
 }

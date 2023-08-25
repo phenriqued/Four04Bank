@@ -4,6 +4,8 @@ import com.github.Four04Bank.exceptions.AccountException.AccountException;
 import com.github.Four04Bank.models.Holders.Holder;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Account {
 
@@ -12,13 +14,12 @@ public abstract class Account {
     private BigDecimal balance;
     private Holder holder;
 
-    public Account(String agency, String number, Holder holder) {
-        if(agency == null || number == null || holder == null ||
-                agency.length() != 4 || number.length() != 8){
+    public Account(String agency, Holder holder) {
+        if(agency == null || holder == null || agency.length() != 4){
             throw new AccountException("[ERROR] Dados inválidos!");
         }
         this.agency = agency;
-        this.number = number;
+        generateAccountNumber();
         this.balance = BigDecimal.ZERO;
         this.holder = holder;
     }
@@ -54,6 +55,15 @@ public abstract class Account {
         this.balance = balance;
     }
 
+    private void generateAccountNumber(){
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i <= 7; i++){
+            int numberAccount = (int)(Math.random() * 10);
+            stringBuilder.append(numberAccount);
+        }
+        number = stringBuilder.toString();
+    }
+
     protected void validateMoney(BigDecimal money){
         if(money == null || money.compareTo(BigDecimal.ZERO) <= 0){
             throw new AccountException("[ERROR] Erro em efetuar a operação!");
@@ -64,6 +74,17 @@ public abstract class Account {
         setBalance(getBalance().add(money));
     }
     public abstract void withdraw(BigDecimal money);
-    public abstract void transfer(Account account, BigDecimal money);
+    public abstract void transfer(Account recipientAccount, BigDecimal money);
+
+    protected abstract String getCompleteNumberAccount();
+
+    @Override
+    public String toString() {
+        return "Account {" +
+                "agency='" + agency + '\'' +
+                ", number='" + number + '\'' +
+                ", holder=" + holder +
+                '}';
+    }
 
 }

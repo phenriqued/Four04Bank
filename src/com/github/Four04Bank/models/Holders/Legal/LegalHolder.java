@@ -1,13 +1,14 @@
 package com.github.Four04Bank.models.Holders.Legal;
 
 import com.github.Four04Bank.exceptions.HolderException.HolderException;
+import com.github.Four04Bank.models.Holders.ClientData;
 import com.github.Four04Bank.models.Holders.Holder;
 
 public class LegalHolder extends Holder {
     private String cnpj;
 
-    public LegalHolder(String name, Integer old, String address, String phone, String cnpj) {
-        super(name, old, address, phone);
+    public LegalHolder(ClientData clientData, String cnpj) {
+        super(clientData);
         this.cnpj = cnpj;
     }
 
@@ -24,6 +25,12 @@ public class LegalHolder extends Holder {
         if(cnpj == null || cnpj.length() != 14)
             throw new HolderException("[ERROR] CNPJ inválido!");
 
+    }
+
+    @Override
+    public String toString() {
+        return "Titular Jurídico [Nome do Orgão: " +getName() + " - CNPJ: "+ getCnpj()+
+                "\nEndereço: "+getAddress() + " - Telefone: "+getPhone()+"]\n";
     }
 
 }
